@@ -55,7 +55,7 @@ PlasmoidItem {
         appletInterface: kickoff
 
         appNameFormat: Plasmoid.configuration.appNameFormat
-        flat: true // have categories, but no subcategories
+        flat: !Plasmoid.configuration.showSubmenu // have subcategories!
         sorted: Plasmoid.configuration.alphaSort
         showSeparators: true
         showTopLevelItems: true

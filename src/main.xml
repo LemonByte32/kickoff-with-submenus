@@ -73,5 +73,9 @@
             <label>Whether to highlight newly installed applications</label>
             <default>true</default>
         </entry>
+        <entry name="showSubmenu" type="Bool">
+            <label>Whether to show subcategories inside categories</label>
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

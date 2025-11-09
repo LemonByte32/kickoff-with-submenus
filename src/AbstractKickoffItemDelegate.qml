@@ -24,6 +24,8 @@ import org.kde.plasma.plasmoid
 T.ItemDelegate {
     id: root
 
+    signal submenuSelected
+
     enum AppNameFormat {
         NameOnly,
         GenericNameOnly,
@@ -126,6 +128,12 @@ T.ItemDelegate {
             if ((!root.activeFocus && !root.isSearchResult) || dragHandler.active || touchDragHandler.active) {
                 return;
             }
+
+            if (model.hasChildren) {
+                root.submenuSelected()
+                return;
+            }
+
             view.currentIndex = index
             // if successfully triggered, close popup
             if (view.model.trigger && view.model.trigger(index, "", null)) {

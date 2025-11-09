@@ -40,6 +40,7 @@ KCM.SimpleKCM {
     property alias cfg_compactMode: compactModeCheckbox.checked
     property alias cfg_highlightNewlyInstalledApps: highlightNewlyInstalledAppsCheckbox.checked
     property alias cfg_switchCategoryOnHover: switchCategoryOnHoverCheckbox.checked
+    property alias cfg_showSubmenu: showSubmenuCheckbox.checked
 
     Kirigami.FormLayout {
         QQC2.Button {
@@ -203,6 +204,11 @@ KCM.SimpleKCM {
         QQC2.CheckBox {
             id: switchCategoryOnHoverCheckbox
             text: i18n("Switch sidebar categories when hovering over them")
+        }
+
+        QQC2.CheckBox {
+            id: showSubmenuCheckbox
+            text: i18n("Show submenus")
         }
 
         QQC2.Button {

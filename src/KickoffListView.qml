@@ -38,6 +38,8 @@ EmptyPage {
     property bool mainContentView: false
     property bool hasSectionView: false
 
+    signal submenuSelected
+
     /**
      * Request showing the section view
      */
@@ -143,6 +145,10 @@ EmptyPage {
 
         delegate: KickoffListDelegate {
             width: view.availableWidth
+
+            onSubmenuSelected : () => {
+                root.submenuSelected()
+            }
         }
 
         // Without switch-on-hover, it's possible for the selected category and the hovered category to be adjacent.

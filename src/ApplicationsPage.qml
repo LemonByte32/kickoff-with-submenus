@@ -85,7 +85,7 @@ BasePage {
         // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
         // But to trigger model data update, set initial value to 0
         property int appsModelRow: 0
-        readonly property Kicker.AppsModel appsModel: kickoff.rootModel.modelForRow(appsModelRow)
+        property Kicker.AppsModel appsModel: kickoff.rootModel.modelForRow(appsModelRow)
         Connections {
             target: kickoff.rootModel
             function onRefreshed() { // recalculate appsModel binding on rootModel refresh;
@@ -138,6 +138,10 @@ BasePage {
 
                 onShowSectionViewRequested: sectionName => {
                     stackView.showSectionView(sectionName, this);
+                }
+
+                onSubmenuSelected : () => {
+                    appsModel = appsModel.modelForRow(applicationsListView.currentIndex)
                 }
             }
         }
@@ -215,6 +219,7 @@ BasePage {
                     && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
                     stackView.replace(stackView.preferredAppsViewComponent)
                 }
+                appsModel = kickoff.rootModel.modelForRow(appsModelRow)
             }
         }
         Connections {
