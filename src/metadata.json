@@ -114,6 +114,7 @@
         "Icon": "start-here-kde",
         "License": "GPL-2.0+",
         "Name": "Kickoff with submenus",
+        "Website": "https://github.com/LemonByte32/kickoff-with-submenus",
         "Id": "pinots.kickoff-with-submenus"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
