@@ -13,7 +13,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Templates as T
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PC3
@@ -70,8 +69,8 @@ T.ItemDelegate {
 
         let actions = Array.from(model.actionList);
         const favoriteActions = Tools.createFavoriteActions(
-            i18n, //i18n() function callback
-            view.model.favoritesModel,
+            i18n, //i18n() function callback // qmllint disable unqualified
+            root.view.model.favoritesModel,
             model.favoriteId,
         );
         if (favoriteActions) {
@@ -119,7 +118,6 @@ T.ItemDelegate {
     // using `model` () instead of `root.model` leads to errors about
     // `model` not having the trigger() function
     action: T.Action {
-        Accessible.name: root.text // https://bugreports.qt.io/browse/QTBUG-130360
         onTriggered: {
             // Unless we're showing search results, eat the activation if we
             // don't have focus, to prevent the return/enter key from
@@ -134,9 +132,10 @@ T.ItemDelegate {
                 return;
             }
 
-            view.currentIndex = index
+            root.view.currentIndex = root.index
+
             // if successfully triggered, close popup
-            if (view.model.trigger && view.model.trigger(index, "", null)) {
+            if (root.view.model.trigger && root.view.model.trigger(root.index, "", null)) {
                 if (kickoff.hideOnWindowDeactivate) {
                     kickoff.expanded = false;
                 }
@@ -221,11 +220,11 @@ T.ItemDelegate {
             }
             // No need to check currentIndex first because it's
             // built into QQuickListView::setCurrentIndex() already
-            root.view.currentIndex = index
+            root.view.currentIndex = root.index
         }
         onPressed: mouse => {
             // Select and focus on press to improve responsiveness and touch feedback
-            view.currentIndex = index
+            root.view.currentIndex = root.index
             root.forceActiveFocus(Qt.MouseFocusReason)
 
             // We normally try to open right click menus on press like Qt Widgets
