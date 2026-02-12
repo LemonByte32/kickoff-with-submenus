@@ -98,7 +98,7 @@ EmptyPage {
         }
         width: Math.min(parent.width, Math.floor((parent.width - leftMargin - rightMargin - (kickoff.mayHaveGridWithScrollBar ? verticalScrollBar.implicitWidth : 0)) / cellWidth) * cellWidth + leftMargin + rightMargin)
 
-        Accessible.description: i18n("Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
+        Accessible.description: i18nc("@info:whatsthis Accessible description", "Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
 
 
         implicitWidth: {
@@ -239,7 +239,11 @@ EmptyPage {
             // at bottom of a given column, not necessarily in the last row
             let atBottom = currentIndex >= count - columns
             // Implements the keyboard navigation described in https://www.w3.org/TR/wai-aria-practices-1.2/#grid
-            if (count > 1) {
+            if (count > 0 && (event.key == Qt.Key_Return || event.key == Qt.Key_Enter)) {
+                (root.currentItem as AbstractKickoffItemDelegate).action.triggered();
+                root.currentItem.forceActiveFocus(Qt.ShortcutFocusReason);
+                event.accepted = true;
+            } else if (count > 1) {
                 switch (event.key) {
                     case Qt.Key_Left: if (!atLeft && !kickoff.searchField.activeFocus) {
                         moveCurrentIndexLeft()
@@ -311,13 +315,6 @@ EmptyPage {
                         currentIndex = Math.min(targetIndex, count - 1)
                         focusCurrentItem(event, Qt.TabFocusReason)
                     } break
-                    case Qt.Key_Return:
-                        /* Fall through*/
-                    case Qt.Key_Enter:
-                        (root.currentItem as AbstractKickoffItemDelegate).action.triggered();
-                        root.currentItem.forceActiveFocus(Qt.ShortcutFocusReason);
-                        event.accepted = true;
-                        break;
                 }
             }
             movedWithKeyboard = event.accepted

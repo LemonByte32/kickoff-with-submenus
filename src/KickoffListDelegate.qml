@@ -25,12 +25,12 @@ AbstractKickoffItemDelegate {
     property bool compact: Kirigami.Settings.tabletMode ? false : Plasmoid.configuration.compactMode
 
     leftPadding: KickoffSingleton.listItemMetrics.margins.left
-    + (mirrored ? KickoffSingleton.fontMetrics.descent : 0)
+        + (mirrored ? KickoffSingleton.fontMetrics.descent : 0)
     rightPadding: KickoffSingleton.listItemMetrics.margins.right
-    + (!mirrored ? KickoffSingleton.fontMetrics.descent : 0)
+        + (!mirrored ? KickoffSingleton.fontMetrics.descent : 0)
     // Otherwise it's *too* compact :)
-    topPadding: compact ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
-    bottomPadding: compact ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
+    topPadding: compact && !isCategoryListItem ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
+    bottomPadding: compact && !isCategoryListItem ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
 
     icon.width: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.smallMedium : Kirigami.Units.iconSizes.medium
     icon.height: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.smallMedium : Kirigami.Units.iconSizes.medium
@@ -56,48 +56,55 @@ AbstractKickoffItemDelegate {
             source: root.decoration || root.icon.name || root.icon.source
         }
 
-        GridLayout {
-            id: gridLayout
+        Item {
+            id: gridLayoutWrapper // exists to break implicitWidth propagation
 
-            readonly property color textColor: root.iconAndLabelsShouldlookSelected ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-
+            implicitHeight: gridLayout.implicitHeight
             Layout.fillWidth: true
 
-            rows: root.compact ? 1 : 2
-            columns: root.compact ? 2 : 1
-            rowSpacing: 0
-            columnSpacing: Kirigami.Units.largeSpacing
+            GridLayout {
+                id: gridLayout
 
-            PC3.Label {
-                id: label
-                Layout.fillWidth: !descriptionLabel.visible
-                Layout.maximumWidth: root.width - root.leftPadding - root.rightPadding - icon.width - row.spacing
-                text: root.text
-                textFormat: root.isMultilineText ? Text.StyledText : Text.PlainText
-                elide: Text.ElideRight
-                wrapMode: root.isMultilineText ? Text.WordWrap : Text.NoWrap
-                verticalAlignment: Text.AlignVCenter
-                maximumLineCount: root.isMultilineText ? Infinity : 1
-                color: gridLayout.textColor
-            }
+                readonly property color textColor: root.iconAndLabelsShouldlookSelected ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
 
-            PC3.Label {
-                id: descriptionLabel
-                Layout.fillWidth: true
-                visible: {
-                    let isApplicationSearchResult = root.model?.group === "Applications" || root.model?.group === "System Settings"
-                    let isSearchResultWithDescription = root.isSearchResult && (Plasmoid.configuration?.appNameFormat > 1 || !isApplicationSearchResult)
-                    return text.length > 0 && (isSearchResultWithDescription || (text !== label.text && !root.isCategoryListItem && Plasmoid.configuration?.appNameFormat > 1))
+                anchors.fill: parent
+
+                rows: root.compact ? 1 : 2
+                columns: root.compact ? 2 : 1
+                rowSpacing: 0
+                columnSpacing: Kirigami.Units.largeSpacing
+
+                PC3.Label {
+                    id: label
+                    Layout.fillWidth: !descriptionLabel.visible
+                    Layout.preferredWidth: Math.min(gridLayoutWrapper.width, implicitWidth)
+                    text: root.text
+                    textFormat: root.isMultilineText ? Text.StyledText : Text.PlainText
+                    elide: Text.ElideRight
+                    wrapMode: root.isMultilineText ? Text.WordWrap : Text.NoWrap
+                    verticalAlignment: Text.AlignVCenter
+                    maximumLineCount: root.isMultilineText ? Infinity : 1
+                    color: gridLayout.textColor
                 }
-                opacity: 0.75
-                text: root.description
-                textFormat: Text.PlainText
-                font: Kirigami.Theme.smallFont
-                elide: Text.ElideRight
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: root.compact ? Text.AlignRight : Text.AlignLeft
-                maximumLineCount: 1
-                color: gridLayout.textColor
+
+                PC3.Label {
+                    id: descriptionLabel
+                    Layout.fillWidth: true
+                    visible: {
+                        let isApplicationSearchResult = root.model?.group === "Applications" || root.model?.group === "System Settings"
+                        let isSearchResultWithDescription = root.isSearchResult && (Plasmoid.configuration?.appNameFormat > 1 || !isApplicationSearchResult)
+                        return text.length > 0 && (isSearchResultWithDescription || (text !== label.text && !root.isCategoryListItem && Plasmoid.configuration?.appNameFormat > 1))
+                    }
+                    opacity: 0.75
+                    text: root.description
+                    textFormat: Text.PlainText
+                    font: Kirigami.Theme.smallFont
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: root.compact ? Text.AlignRight : Text.AlignLeft
+                    maximumLineCount: 1
+                    color: gridLayout.textColor
+                }
             }
         }
 
@@ -108,8 +115,8 @@ AbstractKickoffItemDelegate {
             sourceComponent: Badge {
                 text: root.isCategoryListItem ? "" : Accessible.name
                 Accessible.name: i18nc("Newly installed app, badge, keep short", "New!") // qmllint disable unqualified
-                Accessible.description: root.isCategoryListItem ? i18n("There is a newly installed application in this category") // qmllint disable unqualified
-                                                         : i18n("Newly installed application") // qmllint disable unqualified
+                Accessible.description: root.isCategoryListItem ? i18nc("@info:whatsthis Accessible description for badge", "There is a newly installed application in this category") // qmllint disable unqualified
+                                                         : i18nc("@info:whatsthis Accessible description for badge", "Newly installed application") // qmllint disable unqualified
             }
         }
     }

@@ -45,7 +45,7 @@ KCM.SimpleKCM {
         QQC2.Button {
             id: iconButton
 
-            Kirigami.FormData.label: i18n("Icon:") // qmllint disable unqualified
+            Kirigami.FormData.label: i18nc("@label prefix for icon-only button", "Icon:") // qmllint disable unqualified
 
             implicitWidth: previewFrame.width + Kirigami.Units.smallSpacing * 2
             implicitHeight: previewFrame.height + Kirigami.Units.smallSpacing * 2
@@ -61,7 +61,7 @@ KCM.SimpleKCM {
 
             KIconThemes.IconDialog {
                 id: iconDialog
-                onIconNameChanged: {
+                onAccepted: {
                     root.cfg_icon = iconName || Tools.defaultIconName;
                 }
             }
@@ -111,22 +111,6 @@ KCM.SimpleKCM {
             }
         }
 
-        Item {
-            Kirigami.FormData.isSection: true
-        }
-
-        QQC2.ComboBox {
-            id: appNameFormat
-
-            Kirigami.FormData.label: i18n("Show applications as:") // qmllint disable unqualified
-
-            model: [i18n("Name only"), i18n("Description only"), i18n("Name (Description)"), i18n("Description (Name)")] // qmllint disable unqualified
-        }
-
-        Item {
-            Kirigami.FormData.isSection: true
-        }
-
         Kirigami.ActionTextField {
             id: menuLabel
             enabled: Plasmoid.formFactor !== PlasmaCore.Types.Vertical
@@ -168,6 +152,18 @@ KCM.SimpleKCM {
             Kirigami.FormData.isSection: true
         }
 
+        QQC2.ComboBox {
+            id: appNameFormat
+
+            Kirigami.FormData.label: i18nc("@label:listbox", "Show applications as:") // qmllint disable unqualified
+
+            model: [i18nc("@item:inlistbox", "Name only"), i18nc("@item:inlistbox", "Description only"), i18nc("@item:inlistbox", "Name (Description)"), i18nc("@item:inlistbox", "Description (Name)")] // qmllint disable unqualified
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
         RowLayout {
             Kirigami.FormData.label: i18nc("General options", "General:") // qmllint disable unqualified
             spacing: Kirigami.Units.smallSpacing
@@ -183,7 +179,7 @@ KCM.SimpleKCM {
 
         QQC2.CheckBox {
             id: compactModeCheckbox
-            text: i18n("Use compact list item style") // qmllint disable unqualified
+            text: i18nc("@option:check", "Use compact list item style") // qmllint disable unqualified
             checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.compactMode
             enabled: !Kirigami.Settings.tabletMode
         }
@@ -197,12 +193,12 @@ KCM.SimpleKCM {
 
         QQC2.CheckBox {
             id: highlightNewlyInstalledAppsCheckbox
-            text: i18n("Highlight newly installed applications") // qmllint disable unqualified
+            text: i18nc("@option:check", "Highlight newly installed applications") // qmllint disable unqualified
         }
 
         QQC2.CheckBox {
             id: switchCategoryOnHoverCheckbox
-            text: i18n("Switch sidebar categories when hovering over them") // qmllint disable unqualified
+            text: i18nc("@option:check", "Switch sidebar categories when hovering over them") // qmllint disable unqualified
         }
 
         QQC2.CheckBox {
@@ -223,8 +219,8 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: paneSwapOff
-            Kirigami.FormData.label: i18n("Sidebar position:") // qmllint disable unqualified
-            text: mirrored ? i18n("Right") : i18n("Left") // qmllint disable unqualified
+            Kirigami.FormData.label: i18nc("@label:group prefix for radio button group", "Sidebar position:") // qmllint disable unqualified
+            text: mirrored ? i18nc("@option:radio sidebar position", "Right") : i18nc("option:radio sidebar position", "Left") // qmllint disable unqualified
             QQC2.ButtonGroup.group: paneSwapGroup
             property int index: 0
             checked: !Plasmoid.configuration.paneSwap
@@ -232,7 +228,7 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: paneSwapOn
-            text: mirrored ? i18n("Left") : i18n("Right") // qmllint disable unqualified
+            text: mirrored ? i18nc("@option:radio sidebar position", "Left") : i18nc("@option:radio sidebar position", "Right") // qmllint disable unqualified
             QQC2.ButtonGroup.group: paneSwapGroup
             property int index: 1
             checked: Plasmoid.configuration.paneSwap
@@ -240,8 +236,8 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: showFavoritesInGrid
-            Kirigami.FormData.label: i18n("Show favorites:") // qmllint disable unqualified
-            text: i18nc("Part of a sentence: 'Show favorites in a grid'", "In a grid") // qmllint disable unqualified
+            Kirigami.FormData.label: i18nc("@title:group prefix for radio button group", "Show favorites:") // qmllint disable unqualified
+            text: i18nc("@option:radio Part of a sentence: 'Show favorites in a grid'", "In a grid") // qmllint disable unqualified
             QQC2.ButtonGroup.group: favoritesDisplayGroup
             property int index: 0
             checked: Plasmoid.configuration.favoritesDisplay === index
@@ -249,7 +245,7 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: showFavoritesInList
-            text: i18nc("Part of a sentence: 'Show favorites in a list'", "In a list") // qmllint disable unqualified
+            text: i18nc("@option:radio Part of a sentence: 'Show favorites in a list'", "In a list") // qmllint disable unqualified
             QQC2.ButtonGroup.group: favoritesDisplayGroup
             property int index: 1
             checked: Plasmoid.configuration.favoritesDisplay === index
@@ -257,8 +253,8 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: showAppsInGrid
-            Kirigami.FormData.label: i18n("Show other applications:") // qmllint disable unqualified
-            text: i18nc("Part of a sentence: 'Show other applications in a grid'", "In a grid") // qmllint disable unqualified
+            Kirigami.FormData.label: i18nc("@title:group prefix for radio button group", "Show other applications:") // qmllint disable unqualified
+            text: i18nc("@option:radio Part of a sentence: 'Show other applications in a grid'", "In a grid") // qmllint disable unqualified
             QQC2.ButtonGroup.group: applicationsDisplayGroup
             property int index: 0
             checked: Plasmoid.configuration.applicationsDisplay === index
@@ -266,7 +262,7 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: showAppsInList
-            text: i18nc("Part of a sentence: 'Show other applications in a list'", "In a list") // qmllint disable unqualified
+            text: i18nc("@option:radio Part of a sentence: 'Show other applications in a list'", "In a list") // qmllint disable unqualified
             QQC2.ButtonGroup.group: applicationsDisplayGroup
             property int index: 1
             checked: Plasmoid.configuration.applicationsDisplay === index
@@ -278,8 +274,8 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: powerActionsButton
-            Kirigami.FormData.label: i18n("Show buttons for:") // qmllint disable unqualified
-            text: i18n("Power") // qmllint disable unqualified
+            Kirigami.FormData.label: i18nc("@title:group prefix for radio button group", "Show buttons for:") // qmllint disable unqualified
+            text: i18nc("@option:radio Show buttons for", "Power") // qmllint disable unqualified
             QQC2.ButtonGroup.group: radioGroup
             property string actions: "suspend,hibernate,reboot,shutdown"
             property int index: 0
@@ -288,7 +284,7 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: sessionActionsButton
-            text: i18n("Session") // qmllint disable unqualified
+            text: i18nc("@option:radio Show buttons for", "Session") // qmllint disable unqualified
             QQC2.ButtonGroup.group: radioGroup
             property string actions: "lock-screen,logout,save-session,switch-user"
             property int index: 1
@@ -297,7 +293,7 @@ KCM.SimpleKCM {
 
         QQC2.RadioButton {
             id: allActionsButton
-            text: i18n("Power and session") // qmllint disable unqualified
+            text: i18nc("@option:radio Show buttons for", "Power and session") // qmllint disable unqualified
             QQC2.ButtonGroup.group: radioGroup
             property string actions: "lock-screen,logout,save-session,switch-user,suspend,hibernate,reboot,shutdown"
             property int index: 3
@@ -306,7 +302,7 @@ KCM.SimpleKCM {
 
         QQC2.CheckBox {
             id: showActionButtonCaptions
-            text: i18n("Show action button captions") // qmllint disable unqualified
+            text: i18nc("@option:check", "Show action button captions") // qmllint disable unqualified
         }
     }
 
