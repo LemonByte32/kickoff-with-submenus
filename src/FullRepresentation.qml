@@ -16,6 +16,7 @@ import QtQuick
 import QtQuick.Templates as T
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
+import org.kde.plasma.private.kicker as Kicker
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.extras as PlasmaExtras
 
@@ -31,8 +32,6 @@ EmptyPage {
 
     Layout.minimumWidth: implicitWidth
     Layout.minimumHeight: implicitHeight
-    Layout.preferredWidth: Math.max(implicitWidth, width)
-    Layout.preferredHeight: Math.max(implicitHeight, height)
 
     property alias normalPage: normalPage
     property bool blockingHoverFocus: true
@@ -82,6 +81,8 @@ EmptyPage {
         id: contentItemStackView
         focus: true
         movementTransitionsEnabled: true
+        implicitHeight: normalPage.implicitHeight + topPadding + bottomPadding
+        implicitWidth: normalPage.implicitWidth + leftPadding + rightPadding
         // Not using a component to prevent it from being destroyed
         initialItem: NormalPage {
             id: normalPage
@@ -112,9 +113,11 @@ EmptyPage {
                 Keys.onUpPressed: event => {
                     kickoff.searchField.forceActiveFocus(Qt.BacktabFocusReason)
                 }
-                T.StackView.onActivated: {
-                    kickoff.sideBar = null
-                    kickoff.contentArea = searchView
+                T.StackView.onStatusChanged: {
+                    if (T.StackView.status === T.StackView.Activating || T.StackView.status === T.StackView.Activating) {
+                        kickoff.sideBar = null
+                        kickoff.contentArea = searchView
+                    }
                 }
 
                 Loader {
@@ -196,7 +199,6 @@ EmptyPage {
             function onSearchTextChanged() {
                 if ((root.header as Header).searchText.length === 0 &&
                     contentItemStackView.currentItem.objectName !== "normalPage") {
-                    root.blockingHoverFocus = true
                     contentItemStackView.reverseTransitions = true
                     contentItemStackView.replace(normalPage)
                 } else if ((root.header as Header).searchText.length > 0) {
@@ -204,10 +206,46 @@ EmptyPage {
                         contentItemStackView.reverseTransitions = false
                         contentItemStackView.replace(searchViewComponent)
                     } else {
-                        root.blockingHoverFocus = true
-                        root.interceptedPosition = null
                         contentItemStackView.contentItem.currentIndex = 0
                     }
+                }
+                root.blockingHoverFocus = true
+                root.interceptedPosition = null
+            }
+        }
+    }
+
+    Loader {
+        active: !!kickoff.dragSource.sourceItem
+        anchors.fill: parent
+        sourceComponent: DropArea {
+            id: favoriteRemoveDropArea
+
+            // should be  "as AbstractKickoffItemDelegate", but the type system gets confused when changing view style at runtime
+            readonly property Item draggedItem: kickoff.dragSource.sourceItem
+
+            onEntered: event => {
+                if (draggedItem?.view.model instanceof Kicker.KAStatsFavoritesModel) {
+                    event.accept (Qt.MoveAction)
+                    draggedItem.removalPlaceholderActive = true
+                } else {
+                    event.accepted = false
+                }
+            }
+
+            onDropped: event => {
+                if (draggedItem && kickoff.rootModel.favoritesModel.isFavorite(draggedItem.model.favoriteId) && draggedItem.view.model instanceof Kicker.KAStatsFavoritesModel) {
+                    kickoff.rootModel.favoritesModel.removeFavorite(draggedItem.model.favoriteId);
+                    event.accept(Qt.MoveAction)
+                } else {
+                    draggedItem.removalPlaceholderActive = false
+                    event.accepted = false
+                }
+            }
+
+            onExited: {
+                if (draggedItem) {
+                    draggedItem.removalPlaceholderActive = false
                 }
             }
         }

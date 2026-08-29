@@ -57,7 +57,8 @@ PlasmoidItem {
         appNameFormat: Plasmoid.configuration.appNameFormat
         flat: !Plasmoid.configuration.showSubmenu // have subcategories!
         sorted: Plasmoid.configuration.alphaSort
-        showSeparators: true
+        showSeparators: !sorted && Plasmoid.configuration.applicationsDisplay != 0
+        showRootSeparator: true
         showTopLevelItems: true
 
         showAllApps: true
@@ -145,7 +146,7 @@ PlasmoidItem {
         id: dragSource // BUG 449426
         property Item sourceItem
         Drag.dragType: Drag.Automatic
-        Drag.supportedActions: Qt.CopyAction | Qt.LinkAction
+        Drag.supportedActions: Qt.CopyAction | Qt.LinkAction | Qt.MoveAction
     }
     //END
 
@@ -325,6 +326,7 @@ PlasmoidItem {
                 Layout.maximumWidth: kickoff.vertical ? Kirigami.Units.iconSizes.huge : -1
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                 fillMode: Image.PreserveAspectFit
+                mipmap: true
             }
 
             PC3.Label {

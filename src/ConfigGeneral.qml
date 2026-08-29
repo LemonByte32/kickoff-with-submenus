@@ -180,20 +180,12 @@ KCM.SimpleKCM {
         QQC2.CheckBox {
             id: compactModeCheckbox
             text: i18nc("@option:check", "Use compact list item style") // qmllint disable unqualified
-            checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.compactMode
-            enabled: !Kirigami.Settings.tabletMode
-        }
-        QQC2.Label {
-            visible: Kirigami.Settings.tabletMode
-            text: i18nc("@info:usagetip under a checkbox when Touch Mode is on", "Automatically disabled when in Touch Mode") // qmllint disable unqualified
-            Layout.fillWidth: true
-            wrapMode: Text.Wrap
-            font: Kirigami.Theme.smallFont
+            checked: Plasmoid.configuration.compactMode
         }
 
         QQC2.CheckBox {
             id: highlightNewlyInstalledAppsCheckbox
-            text: i18nc("@option:check", "Highlight newly installed applications") // qmllint disable unqualified
+            text: i18nc("@option:check", "Highlight newly-installed applications") // qmllint disable unqualified
         }
 
         QQC2.CheckBox {
